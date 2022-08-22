@@ -23,8 +23,10 @@
             <div id="app" v-cloak>
                 <section>
                   <h1 @click="switchp">Sujet</h1>
+                  <input type="text" v-model="test">
+                  <a href="#" @click.prevent="control">Control</a>
                   <p v-if="affiche">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque accusamus architecto possimus voluptatum ipsa blanditiis fuga quo, magni qui. Dolores aliquam cumque, quia ratione tempora ut vel quidem asperiores dolorem!</p>
-                  <p v-else>autre Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam soluta corrupti ab impedit veritatis, magni explicabo dolorum quaerat, dicta necessitatibus, accusantium vitae! Laboriosam commodi accusamus aperiam et, voluptatum consectetur minima!</p>
+                  <p v-else>autre {{ test }} Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam soluta corrupti ab impedit veritatis, magni explicabo dolorum quaerat, dicta necessitatibus, accusantium vitae! Laboriosam commodi accusamus aperiam et, voluptatum consectetur minima!</p>
                 </section>
                 <p class="alert" :class="{hidden:!affiche, show:affiche}">texte masqué</p>
             </div>
@@ -32,12 +34,20 @@
             <script >
                 const { ref } = Vue
                 const app = Vue.createApp({
+                    name:"test",
                     setup() { 
-                       affiche = ref(false)
-                       switchp = () => {
+                       //data
+                        let affiche = ref(false)
+                        let test = ref("Pierre")
+                       //methods
+                       const switchp = () => {
                            affiche.value = !affiche.value
+                           control()
                         }
-                        return {affiche, switchp}
+                        const control = () => {
+                            alert('control')
+                        }
+                        return {affiche, switchp, test}
                     }
                 })
                 const vm = app.mount('#app')

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+<Alerte></Alerte>
+<compteur></compteur>
+
+  </div>
+  
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+
+const { ref } = Vue
+
+const alerte = {
+  name: "alerte",
+  template:
+  `<div class="alerte">{{ texte }}<a href="#" @click.prevent="changeText">Change texte</a></div>`
+  ,
+  setup() {
+    let texte = ref(`plop`)
+    const changeText = () => {
+      texte.value = (texte.value == `sossis`) ? "Nouveau texte" : `C'estv  po kokjfso`   
+    }
+    return {texte, changeText}
+  }
+}
+
+const compteur = {
+   name: "compteur",
+   template: `<button class="compteur" @click="increment"> cliqué {{compteur}} </button>`,
+   setup(){
+    let compteur = ref(0)
+    const increment = () => {
+      compteur.value ++
+    }
+    return{compteur, increment}
+   }
+}
+
+  const app = Vue.createApp({
+    name: "components",
+    components: {
+      Alerte : alerte,
+      compteur : compteur
+    },
+    setup(){
+
+    }
+  });
+  const vm = app.mount('#app')
+  </script>
+</body>
+</html>

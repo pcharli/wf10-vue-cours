@@ -1,0 +1,125 @@
+<!doctype html>
+    <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Calculatrice</title>
+            <link rel="stylesheet" href="">
+            <style>
+                [v-cloak] {
+                    display: none;
+                }
+                .done {
+                    background-color: rgba(255,0,0,.10);
+                }
+                .task {
+                    margin-top: 5px;
+                }
+            </style>
+            
+        </head>
+        <body>
+            <div id="app">
+                <p>{{ nom }}</p>
+                <div class="loading" v-if="loading">Loading</div>
+                
+                <section v-cloak v-else>
+                    <h1>Je calcule</h1>
+                    <form ref="formAddItem" action="">
+                        <input type="number" v-model.lazy.trim.number="newItem.nombre" placeholder="nombre" ref="inputNb" autofocus>
+                        <button @click.prevent="addItem('+')">+</button>
+                        <button @click.prevent="addItem('-')">-</button>
+                        <button @click.prevent="addItem('*')">*</button>
+                        <button @click.prevent="addItem('/')">/</button>
+                        <hr>
+                        <p>Total : {{ total }}</p>
+                        <hr>
+                        <h2>Historique</h2>
+                        <ul v-if="historique.length > 0">
+                            
+                            <li class="history"  :key="index"  v-for="(item, index) in historique">{{ item.operateur }} {{ item.nombre }} </li>
+                        </ul>
+                        <p v-else>Historique vide</p>
+                    </form>
+                    <alert></alert>  
+                </section>
+            </div>
+            <script src="https://unpkg.com/vue@next"></script>
+            <script >
+                const { ref, onMounted, watch } = Vue
+
+                const alert = {
+                    name: "alerte",
+                    template: `
+                        <div class="alerte">Attention, danger !!</div>
+                    `
+                }
+
+                const app = Vue.createApp({
+                    name: "App",
+                    components: {
+                        alert
+                    },
+                    setup(){// beforeCreate, create
+                       const newItem = ref({
+                                nombre: '',
+                                operateur: ''
+                            })
+                        let nom = ref("Pierre")
+                        let total = ref(0)
+                       loading = ref(true)
+                       historique = ref([{operateur: '', nombre:0}])
+                       const formAddItem = ref(null)
+                       inputNb = ref(null)
+                        const updateLocalStorage = () => {
+                              localStorage.setItem("historique", JSON.stringify(historique.value))
+                        }
+                        const addItem = (operateur) => {
+                            //alert(operateur)
+                            switch (operateur) {
+                                case '+' : 
+                                    total.value = total.value + newItem.value.nombre
+                                    break
+                                case '-' : 
+                                    total.value = total.value - newItem.value.nombre
+                                    break
+                                case '*' : 
+                                    total.value = total.value * newItem.value.nombre
+                                    break
+                                case '/' : 
+                                    total.value = total.value / newItem.value.nombre
+                                    break
+                            }
+                            newItem.value.operateur = operateur
+                            //console.log(newItem.value)
+                            historique.value.unshift({... newItem.value})
+                            //updateLocalStorage()
+                            formAddItem.value.reset()
+                            newItem.value = {
+                                nombre: "",
+                                operateur: false,
+                            }
+                            inputNb.value.focus()
+                        }
+
+                        onMounted( () => {
+                            setTimeout(() => {
+                                loading.value = false                            
+                            },1000)
+                        })
+
+                        watch(
+                            () => newItem.value.nombre,  //getter sur la propriété
+                            (nouvelleValeur, ancienneValeur) => {
+                            console.log(nouvelleValeur)
+                            console.log(ancienneValeur)
+                        })
+                        
+                        return {nom, loading, total, newItem, historique, addItem, formAddItem, inputNb}
+                    }
+                })
+                const vm = app.mount('#app')
+            </script>
+        </body>
+    </html>

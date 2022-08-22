@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composants</title>
+</head>
+<body>
+    <div id="app">
+        <h1>{{ titre }}</h1>
+        <Alerte></Alerte>
+        <Alerte></Alerte>
+        <hr>
+        <compteur start="0"></compteur>
+        <compteur start="10"></compteur>
+        <compteur start="20"></compteur>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        
+        const { ref } = Vue
+        //components
+        const compteur = {
+            props: ['start'],
+            name: "compteur",
+            template : `
+                <button class="compteur" @click.prevent="increment">Cliqué {{ compteur }} fois</button>
+            `,
+            setup(props) {
+                let compteur = ref(props.start)
+                const increment = () => {
+                    compteur.value ++
+                }
+                return {compteur, increment}
+            }
+        }
+
+        const alerte = {
+            name: "Alerte",
+            template: `
+                <div class="alerte">{{ texte }} <a href="#" @click.prevent="changeText">Change texte</a></div>
+            `,
+            setup() {
+                let texte = ref(`C'est pô juuuust !!!`)
+                const changeText = () => {
+                    texte.value = (texte.value == `C'est pô juuuust !!!`) ? "Nouveau texte" : `C'est pô juuuust !!!`
+                }
+                return {texte, changeText}
+            }
+        }
+
+        const App = Vue.createApp({
+            name: "Application",
+            components: {
+                Alerte: alerte,
+                compteur
+            },
+            setup() {
+                let titre = ref("Titre de l'application")
+                return {titre}
+            }
+        })
+        const vm = App.mount("#app")
+    </script>
+</body>
+</html>
