@@ -1,0 +1,70 @@
+<!doctype html>
+    <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Première app Vue</title>
+            <link rel="stylesheet" href="">
+            <style>
+                [v-cloak] {
+                    display: none;
+                }
+              
+            </style>
+            
+        </head>
+        <body>
+            <div id="app" v-cloak>
+                <section>
+                    <h1>Qui êtes-vous ?</h1>
+                    <form ref="addPerson" action="" @submit.prevent.stop="addPerson">
+                        <input type="text" placeholder="Prénom" v-model.lazy.trim="newPerson.prenom">
+                        <input type="text" placeholder="Nom" v-model.lazy.trim="newPerson.nom">
+                        <input type="number" v-model.lazy.trim.number="newPerson.age" placeholder="âge">
+                        <button>Enregistrer</button>
+                        <hr>
+                        <h2>Notre team</h2>
+                        <ul v-if="personnel.length > 0">
+                            <li :key="index" :data-key="index" v-for="(personne, index) in personnel">{{ personne.nom }} {{ personne.prenom }} a {{ personne.age }}</li>
+                        </ul>
+                        <p v-else>Team vide</p>
+                    </form>
+                </section>
+            </div>
+            <script src="https://unpkg.com/vue@next"></script>
+            <script >
+                const app = Vue.createApp({
+                    name: "App",
+                    data() { 
+                        return {
+                            newPerson: {
+                                nom: "",
+                                prenom: "",
+                                age: ""
+                            },
+                            personnel: []
+                        }
+                    },
+                    created() {
+                        if(localStorage.personnel) {
+                            this.personnel = JSON.parse(localStorage.personnel)
+                        }
+                    },
+                    methods: {
+                        addPerson() {
+                            this.personnel.push({... this.newPerson})
+                            localStorage.setItem("personnel", JSON.stringify(this.personnel))
+                            this.$refs.addPerson.reset()
+                            this.newPerson =   {
+                                nom: "",
+                                prenom: "",
+                                age: ""
+                            }
+                        }
+                    }
+                })
+                const vm = app.mount('#app')
+            </script>
+        </body>
+    </html>

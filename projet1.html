@@ -1,0 +1,43 @@
+<!doctype html>
+    <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Première app Vue</title>
+            <link rel="stylesheet" href="">
+            <style>
+                [v-cloak] {
+                    display: none;
+                }
+            </style>
+            
+        </head>
+        <body>
+            <div id="app" v-cloak>
+                <section :id="idSection">
+                    <h1>{{ titre.toUpperCase() }}</h1>
+                    <p>{{ texte }}</p>
+                    <p>Il est exactement {{ time }}</p>
+                    <p>{{ inter ? "vrai" : "faux" }}</p>
+                    <p>{{inter?"vrai":"faux"}}</p>
+                </section>
+            </div>
+            <script src="https://unpkg.com/vue@next"></script>
+            <script >
+                const app = Vue.createApp({
+                    name: "App",
+                    data() { 
+                        return {
+                            titre: "Contenu du titre",
+                            texte: "lorem ipsum",
+                            idSection: "app-4",
+                            time: new Date().toLocaleTimeString(),
+                            inter: true
+                        }
+                    }
+                })
+                app.mount('#app')
+            </script>
+        </body>
+    </html>

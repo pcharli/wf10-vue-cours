@@ -1,0 +1,49 @@
+<!doctype html>
+    <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Première app Vue</title>
+            <link rel="stylesheet" href="">
+            <style>
+                [v-cloak] {
+                    display: none;
+                }
+                h1 {
+                    cursor: pointer;
+                }
+                .hidden {
+                    opacity:0;
+                }
+            </style>
+            
+        </head>
+        <body>
+            <div id="app" v-cloak>
+                <section>
+                  <h1 @click="switchp">Sujet</h1>
+                  <p v-if="affiche">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque accusamus architecto possimus voluptatum ipsa blanditiis fuga quo, magni qui. Dolores aliquam cumque, quia ratione tempora ut vel quidem asperiores dolorem!</p>
+                  <p v-else>autre Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam soluta corrupti ab impedit veritatis, magni explicabo dolorum quaerat, dicta necessitatibus, accusantium vitae! Laboriosam commodi accusamus aperiam et, voluptatum consectetur minima!</p>
+                </section>
+                <p class="alert" :class="{hidden:!affiche, show:affiche}">texte masqué</p>
+            </div>
+            <script src="https://unpkg.com/vue@next"></script>
+            <script >
+                const app = Vue.createApp({
+                    name: "App",
+                    data() { 
+                        return {
+                            affiche: false
+                        }
+                    },
+                    methods: {
+                        switchp() {
+                           this.affiche = !this.affiche
+                        }
+                    }
+                })
+                const vm = app.mount('#app')
+            </script>
+        </body>
+    </html>

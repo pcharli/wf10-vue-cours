@@ -1,0 +1,43 @@
+<!doctype html>
+    <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Première app Vue</title>
+            <link rel="stylesheet" href="">
+            <style>
+                [v-cloak] {
+                    display: none;
+                }
+              
+            </style>
+            
+        </head>
+        <body>
+            <div id="app" v-cloak>
+                <section>
+                    <h1 ref="titre">Essai</h1>
+                    <div ref="contenu">
+                        <p><strong>texte</strong> suite texte</p>
+                    </div>
+                </section>
+            </div>
+            <script src="https://unpkg.com/vue@next"></script>
+            <script >
+                const app = Vue.createApp({
+                    name: "App",
+                    data() { 
+                        return {
+                            affiche: false
+                        }
+                    },
+                    mounted() {
+                        alert(this.$refs.contenu.innerHTML)
+                        alert(this.$refs.titre.innerText)
+                    }
+                })
+                const vm = app.mount('#app')
+            </script>
+        </body>
+    </html>
