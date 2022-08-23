@@ -9,13 +9,12 @@
 <body>
     <div id="app">
         <h1>{{ titre }}</h1>
-        <Alerte></Alerte>
-        <Alerte></Alerte>
-        <hr>
-        <compteur start=0 step=1 :colort="colorBtn"></compteur>
-        <compteur start=10 step=10></compteur>
-        <compteur start=20 step=20></compteur>
-        <compteur></compteur>
+        <p>Vous avez cliqué {{ totalClicks }} fois pour {{ totalIncrement }} incréments</p>
+        
+        <compteur start=0 step=1 :colort="colorBtn" @btn-click="incrementClicks"></compteur>
+        <compteur start=10 step=10 @btn-click="incrementClicks"></compteur>
+        <compteur start=20 step=20 @btn-click="incrementClicks"></compteur>
+        <compteur @btn-click="incrementClicks"></compteur>
         <hr>
         <a href="#" @click.prevent="colorBtn='green'">Change color</a>
     </div>
@@ -47,39 +46,32 @@
             template : `
                 <button :style="{color:colort}" class="compteur" @click.prevent="increment">Cliqué {{ compteur }} fois</button>
             `,
-            setup(props) {
+            setup(props, context) {
                 let compteur = ref(parseInt(props.start))
                 const increment = () => {
                     compteur.value += parseInt(props.step)
+                    context.emit('btn-click', props.step)
                 }
                 return {compteur, increment}
             }
         }
 
-        const alerte = {
-            name: "Alerte",
-            template: `
-                <div class="alerte">{{ texte }} <a href="#" @click.prevent="changeText">Change texte</a></div>
-            `,
-            setup() {
-                let texte = ref(`C'est pô juuuust !!!`)
-                const changeText = () => {
-                    texte.value = (texte.value == `C'est pô juuuust !!!`) ? "Nouveau texte" : `C'est pô juuuust !!!`
-                }
-                return {texte, changeText}
-            }
-        }
 
         const App = Vue.createApp({
             name: "Application",
             components: {
-                Alerte: alerte,
                 compteur
             },
             setup() {
                 let titre = ref("Titre de l'application")
                 let colorBtn = ref('red')
-                return {titre, colorBtn}
+                let totalClicks = ref(0)
+                let totalIncrement = ref(0)
+                const incrementClicks = (value) => {
+                    totalIncrement.value += parseInt(value)
+                    totalClicks.value ++
+                }
+                return {titre, colorBtn, totalClicks, incrementClicks, totalIncrement}
             }
         })
         const vm = App.mount("#app")

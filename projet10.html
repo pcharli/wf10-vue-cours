@@ -9,57 +9,54 @@
 <body>
     <div id="app">
         <h1>{{ titre }}</h1>
-        <Alerte></Alerte>
-        <Alerte></Alerte>
+        <Alerte>Hello Pierre</Alerte>
+        <Alerte>Titre second</Alerte>
         <hr>
-        <compteur start=0 step=1 :colort="colorBtn"></compteur>
-        <compteur start=10 step=10></compteur>
-        <compteur start=20 step=20></compteur>
-        <compteur></compteur>
         <hr>
         <a href="#" @click.prevent="colorBtn='green'">Change color</a>
+        <hr>
+
+        <news>
+            <template v-slot:titre>Titre de la news</template>
+            <template v-slot:chapo>Chapo de la news</template>
+            <template v-slot:auteur>Marcel</template>
+            Texte de la news.
+        </news>
+        <news>
+            <template v-slot:titre>Titre seconde news</template>
+            <template v-slot:auteur>Benoit</template>
+            Texte de la seconde news.
+        </news>
+      
     </div>
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
+      
         
         const { ref } = Vue
         //components
-        const compteur = {
-            //props: [start, step],
-            props: {
-                start: {
-                    type: String,
-                    default: "0",
-                    required: false
-                },
-                step: {
-                    type: String,
-                    default: "1",
-                    required: false
-                },
-                colort: {
-                    type: String,
-                    default: "black"
-                }
-            },
-            name: "compteur",
-            template : `
-                <button :style="{color:colort}" class="compteur" @click.prevent="increment">Cliqué {{ compteur }} fois</button>
-            `,
-            setup(props) {
-                let compteur = ref(parseInt(props.start))
-                const increment = () => {
-                    compteur.value += parseInt(props.step)
-                }
-                return {compteur, increment}
-            }
+        const news = {
+            name: "news",
+            template: `
+                <div class="article">
+                    <h1><slot name="titre"></slot></h1> 
+                    <p class="chapo"><slot name="chapo"></slot></p>
+                    <p><slot></slot></p>
+                    <p class="auteur"><slot name="auteur"></slot></p>
+                </div>
+                <hr>
+            `
         }
+
 
         const alerte = {
             name: "Alerte",
             template: `
-                <div class="alerte">{{ texte }} <a href="#" @click.prevent="changeText">Change texte</a></div>
+                <div class="alerte">
+                    <h1><slot></slot></h1>
+                    {{ texte }} 
+                    <a href="#" @click.prevent="changeText">Change texte</a></div>
             `,
             setup() {
                 let texte = ref(`C'est pô juuuust !!!`)
@@ -74,7 +71,7 @@
             name: "Application",
             components: {
                 Alerte: alerte,
-                compteur
+                news
             },
             setup() {
                 let titre = ref("Titre de l'application")

@@ -9,15 +9,15 @@
 <body>
     <div id="app">
         <h1>{{ titre }}</h1>
-        <Alerte></Alerte>
-        <Alerte></Alerte>
+        <Alerte>
+            <template v-slot:title>Coucou</template>
+            <template v-slot:auteur>Pierre </template>
+            Lorem
+        </Alerte>
         <hr>
-        <compteur start=0 step=1 :colort="colorBtn"></compteur>
-        <compteur start=10 step=10></compteur>
-        <compteur start=20 step=20></compteur>
-        <compteur></compteur>
-        <hr>
-        <a href="#" @click.prevent="colorBtn='green'">Change color</a>
+        <compteur start="0"></compteur>
+        <compteur start="10"></compteur>
+        <compteur start="20"></compteur>
     </div>
 
     <script src="https://unpkg.com/vue@next"></script>
@@ -26,31 +26,15 @@
         const { ref } = Vue
         //components
         const compteur = {
-            //props: [start, step],
-            props: {
-                start: {
-                    type: String,
-                    default: "0",
-                    required: false
-                },
-                step: {
-                    type: String,
-                    default: "1",
-                    required: false
-                },
-                colort: {
-                    type: String,
-                    default: "black"
-                }
-            },
+            props: ['start'],
             name: "compteur",
             template : `
-                <button :style="{color:colort}" class="compteur" @click.prevent="increment">Cliqué {{ compteur }} fois</button>
+                <button class="compteur" @click.prevent="increment">Cliqué {{ compteur }} fois</button>
             `,
             setup(props) {
-                let compteur = ref(parseInt(props.start))
+                let compteur = ref(props.start)
                 const increment = () => {
-                    compteur.value += parseInt(props.step)
+                    compteur.value ++
                 }
                 return {compteur, increment}
             }
@@ -59,7 +43,12 @@
         const alerte = {
             name: "Alerte",
             template: `
-                <div class="alerte">{{ texte }} <a href="#" @click.prevent="changeText">Change texte</a></div>
+                <div class="alerte">{{ texte }} 
+                    <h1><slot name="title"></slot></h1>
+                    <p class="auteur"><slot name="auteur"></slot></p>
+                    <p><slot></slot></p>
+                    <a href="#" @click.prevent="changeText">Change texte</a>
+                </div>
             `,
             setup() {
                 let texte = ref(`C'est pô juuuust !!!`)
@@ -78,8 +67,7 @@
             },
             setup() {
                 let titre = ref("Titre de l'application")
-                let colorBtn = ref('red')
-                return {titre, colorBtn}
+                return {titre}
             }
         })
         const vm = App.mount("#app")
